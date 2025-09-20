@@ -1,0 +1,29 @@
+{
+  "name": "fetchx",
+  "version": "0.0.1",
+  "description": "simple, yet powerful, HTTP client designed to handle common API interactions with built-in support for token-based authentication and automatic token renewal",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "test": "vitest"
+  },
+  "keywords": [
+    "fetch",
+    "api"
+  ],
+  "author": "Ferdinand Saporas Bergado <ferdiebergado@gmail.com>",
+  "license": "MIT",
+  "packageManager": "pnpm@10.13.1",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.44.0",
+    "@typescript-eslint/parser": "^8.44.0",
+    "eslint": "^9.36.0",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
+  },
+  "files": [
+    "dist"
+  ]
+}
