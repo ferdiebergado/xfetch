@@ -120,7 +120,7 @@ export class APIClient implements HTTPClient {
       let errorBody: Record<string, unknown> | string = 'Unknown Error';
       try {
         errorBody = (await response.json()) as Record<string, unknown>;
-      } catch (e) {
+      } catch {
         // If the response body is not JSON, use the plain text
         errorBody = await response.text();
       }

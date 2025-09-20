@@ -8,11 +8,11 @@ const mockFetch = vi.fn();
 class MockResponse {
   ok: boolean;
   status: number;
-  data: any;
+  data: Record<string, unknown>;
   headers: Headers;
 
   constructor(
-    body: any,
+    body: Record<string, unknown>,
     init: { status: number; ok: boolean; headers?: Headers }
   ) {
     this.ok = init.ok;
@@ -31,7 +31,7 @@ class MockResponse {
 }
 
 // Global mock for fetch
-globalThis.fetch = mockFetch as any;
+globalThis.fetch = mockFetch;
 
 describe('APIClient', () => {
   const baseURL = 'https://api.example.com';
