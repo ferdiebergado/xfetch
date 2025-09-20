@@ -2,18 +2,16 @@
 
 ## Overview
 
-The `fetchx` is a simple, yet powerful, HTTP client designed to handle common API interactions with built-in support for token-based authentication and automatic token renewal.
+`fetchx` is a simple, yet powerful, HTTP client designed to handle common API interactions with built-in support for token-based authentication and automatic token renewal.
 
 ## Initialization
 
 To use the client, simply create a new instance with your API's base URL.
 
 ```ts
-import { APIClient } from 'fetchx';
+import { APIClient } from '@ferdiebergado/fetchx';
 
-const client = new APIClient(
-  '[https://api.your-domain.com](https://api.your-domain.com)'
-);
+const client = new APIClient('https://api.your-domain.com');
 ```
 
 ## Authentication
@@ -39,9 +37,7 @@ To enable automatic token renewal, you must provide a handler function that retu
 ```ts
 async function renewTokenHandler() {
   // Call your token renewal endpoint
-  const response = await fetch(
-    '[https://api.your-domain.com/auth/refresh](https://api.your-domain.com/auth/refresh)'
-  );
+  const response = await fetch('https://api.your-domain.com/auth/refresh');
   const data = await response.json();
   return {
     accessToken: data.newAccessToken,
@@ -103,7 +99,7 @@ await client.delete('/users/456', undefined, true); // Authorized deletion
 The client will throw an `HTTPError` for any API response with a non-success status code (e.g., 4xx or 5xx). This makes it easy to handle specific errors.
 
 ```ts
-import { HTTPError } from 'fetchx';
+import { HTTPError } from '@ferdiebergado/fetchx';
 
 try {
   await client.get('/non-existent-resource');
@@ -122,19 +118,15 @@ try {
 This example demonstrates a full lifecycle with a refresh handler.
 
 ```ts
-import { APIClient, HTTPError } from 'fetchx';
+import { APIClient, HTTPError } from '@ferdiebergado/fetchx';
 
 async function main() {
-  const client = new APIClient(
-    '[https://api.your-domain.com](https://api.your-domain.com)'
-  );
+  const client = new APIClient('https://api.your-domain.com');
 
   // Your token renewal logic
   client.setTokenRenewHandler(async () => {
     console.log('Token expired, renewing...');
-    const response = await fetch(
-      '[https://api.your-domain.com/auth/refresh](https://api.your-domain.com/auth/refresh)'
-    );
+    const response = await fetch('https://api.your-domain.com/auth/refresh');
     const data = await response.json();
     return {
       accessToken: data.newAccessToken,
