@@ -16,8 +16,10 @@
     "fetch",
     "api",
     "http",
-    "fetch",
-    "typescript"
+    "typescript",
+    "authentication",
+    "token",
+    "rest"
   ],
   "author": "Ferdinand Saporas Bergado <ferdiebergado@gmail.com>",
   "license": "MIT",
