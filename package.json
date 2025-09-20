@@ -10,13 +10,13 @@
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf dist",
-    "test": "vitest"
+    "test": "vitest",
+    "publish": "npm version patch && npm publish"
   },
   "keywords": [
     "fetch",
     "api",
     "http",
-    "fetch",
     "typescript"
   ],
   "author": "Ferdinand Saporas Bergado <ferdiebergado@gmail.com>",
