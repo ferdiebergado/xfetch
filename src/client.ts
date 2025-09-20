@@ -7,7 +7,7 @@ import type {
 } from './types';
 
 export class APIClient implements HTTPClient {
-  baseURL: string;
+  #baseURL: string;
   #accessToken?: string;
   #expiresAt?: number;
   #renewTokenHandler?: TokenRenewHandler;
@@ -17,7 +17,7 @@ export class APIClient implements HTTPClient {
     if (!baseURL || typeof baseURL !== 'string') {
       throw new Error('baseURL must be a non-empty string.');
     }
-    this.baseURL = baseURL;
+    this.#baseURL = baseURL;
   }
 
   /**
@@ -93,7 +93,7 @@ export class APIClient implements HTTPClient {
       await this.#ensureValidToken();
     }
 
-    const url = this.baseURL + path;
+    const url = this.#baseURL + path;
     const headers = new Headers(opts.headers);
 
     const methodsWithBody = ['POST', 'PUT', 'PATCH'];

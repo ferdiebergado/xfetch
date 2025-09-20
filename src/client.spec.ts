@@ -43,10 +43,6 @@ describe('APIClient', () => {
     client = new APIClient(baseURL);
   });
 
-  it('should be initialized with a base URL', () => {
-    expect(client.baseURL).toBe(baseURL);
-  });
-
   describe('doRequest', () => {
     it('should throw an error if the path does not start with a slash', async () => {
       await expect(
