@@ -30,7 +30,7 @@ const expiresAt = Date.now() + expiresIn * 1000;
 client.setAccessToken(accessToken, expiresAt);
 ```
 
-## Automatic Token Renewal
+### Automatic Token Renewal
 
 To enable automatic token renewal, you must provide a handler function that returns a new token and its expiration time.
 
