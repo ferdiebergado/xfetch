@@ -10,7 +10,7 @@ export class APIClient implements HTTPClient {
   baseURL: string;
   #accessToken?: string;
   #expiresAt?: number;
-  #renewTokenHandler?: TokenRenewHandler; // Provided by user to get new token
+  #renewTokenHandler?: TokenRenewHandler;
   #renewing?: Promise<void>;
 
   constructor(baseURL: string) {
@@ -78,7 +78,7 @@ export class APIClient implements HTTPClient {
     path,
     body,
     opts = {},
-    isAuthorized: isAuthorized = false,
+    isAuthorized = false,
   }: RequestOpts): Promise<Response> {
     if (!path || typeof path !== 'string' || !path.startsWith('/')) {
       throw new Error('path must be a non-empty string starting with a slash.');
@@ -140,7 +140,7 @@ export class APIClient implements HTTPClient {
       method: 'GET',
       path,
       opts,
-      isAuthorized: isAuthorized,
+      isAuthorized,
     });
   }
 
@@ -155,7 +155,7 @@ export class APIClient implements HTTPClient {
       path,
       body,
       opts,
-      isAuthorized: isAuthorized,
+      isAuthorized,
     });
   }
 
@@ -170,7 +170,7 @@ export class APIClient implements HTTPClient {
       path,
       body,
       opts,
-      isAuthorized: isAuthorized,
+      isAuthorized,
     });
   }
 
@@ -185,7 +185,7 @@ export class APIClient implements HTTPClient {
       path,
       body,
       opts,
-      isAuthorized: isAuthorized,
+      isAuthorized,
     });
   }
 
@@ -194,7 +194,7 @@ export class APIClient implements HTTPClient {
       method: 'DELETE',
       path,
       opts,
-      isAuthorized: isAuthorized,
+      isAuthorized,
     });
   }
 }
