@@ -1,5 +1,5 @@
 {
-  "name": "fetchx",
+  "name": "@ferdiebergado/fetchx",
   "version": "0.0.1",
   "description": "simple, yet powerful, HTTP client designed to handle common API interactions with built-in support for token-based authentication and automatic token renewal",
   "main": "dist/index.js",
@@ -11,7 +11,10 @@
   },
   "keywords": [
     "fetch",
-    "api"
+    "api",
+    "http",
+    "fetch",
+    "typescript"
   ],
   "author": "Ferdinand Saporas Bergado <ferdiebergado@gmail.com>",
   "license": "MIT",
