@@ -37,7 +37,15 @@ To enable automatic token renewal, you must provide a handler function that retu
 ```ts
 async function renewTokenHandler() {
   // Call your token renewal endpoint
-  const response = await fetch('https://api.your-domain.com/auth/refresh');
+  const response = await fetch('https://api.example.com/auth/refresh', {
+    method: 'POST',
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to refresh token');
+  }
+
   const data = await response.json();
   return {
     accessToken: data.newAccessToken,
@@ -52,7 +60,7 @@ When an authorized request is made, the client will check the token's expiration
 
 ## Making Requests
 
-The client provides helper methods for common HTTP verbs. For authorized requests, you must pass true as the last argument.
+The client provides helper methods for common HTTP verbs. For authorized requests, you must pass `true` as the last argument.
 
 ### GET Request
 
