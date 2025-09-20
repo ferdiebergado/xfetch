@@ -6,6 +6,13 @@ import type {
   TokenRenewHandler,
 } from './types';
 
+/**
+ * APIClient is a generic HTTP client for interacting with RESTful APIs.
+ * It supports automatic access token management, including token renewal via a handler,
+ * and provides convenience methods for standard HTTP requests (GET, POST, PUT, PATCH, DELETE).
+ * APIClient handles authorization headers, error handling, and request configuration,
+ * making it easy to integrate with APIs that require bearer tokens and token expiration logic.
+ */
 export class APIClient implements HTTPClient {
   #baseURL: string;
   #accessToken?: string;
@@ -35,6 +42,9 @@ export class APIClient implements HTTPClient {
     this.#renewTokenHandler = handler;
   }
 
+  /**
+   * Clears the access token and its expiration time.
+   */
   clearAccessToken() {
     this.#accessToken = undefined;
     this.#expiresAt = undefined;
@@ -73,6 +83,10 @@ export class APIClient implements HTTPClient {
     }
   }
 
+  /**
+   * Performs an HTTP request with the specified options.
+   * Handles authorization and error processing.
+   */
   async doRequest({
     method,
     path,
@@ -135,6 +149,12 @@ export class APIClient implements HTTPClient {
     return response;
   }
 
+  /**
+   * Sends an HTTP GET request to the specified path.
+   * @param path The request path starting with a slash.
+   * @param opts Optional request options.
+   * @param isAuthorized Whether to use authorization.
+   */
   async get(path: string, opts?: RequestInit, isAuthorized?: boolean) {
     return this.doRequest({
       method: 'GET',
@@ -144,6 +164,13 @@ export class APIClient implements HTTPClient {
     });
   }
 
+  /**
+   * Sends an HTTP POST request to the specified path with the given body.
+   * @param path The request path starting with a slash.
+   * @param body The request payload.
+   * @param opts Optional request options.
+   * @param isAuthorized Whether to use authorization.
+   */
   async post(
     path: string,
     body: RequestData,
@@ -159,6 +186,13 @@ export class APIClient implements HTTPClient {
     });
   }
 
+  /**
+   * Sends an HTTP PUT request to the specified path with the given body.
+   * @param path The request path starting with a slash.
+   * @param body The request payload.
+   * @param opts Optional request options.
+   * @param isAuthorized Whether to use authorization.
+   */
   async put(
     path: string,
     body: RequestData,
@@ -174,6 +208,13 @@ export class APIClient implements HTTPClient {
     });
   }
 
+  /**
+   * Sends an HTTP PATCH request to the specified path with the given body.
+   * @param path The request path starting with a slash.
+   * @param body The request payload.
+   * @param opts Optional request options.
+   * @param isAuthorized Whether to use authorization.
+   */
   async patch(
     path: string,
     body: RequestData,
@@ -189,6 +230,12 @@ export class APIClient implements HTTPClient {
     });
   }
 
+  /**
+   * Sends an HTTP DELETE request to the specified path.
+   * @param path The request path starting with a slash.
+   * @param opts Optional request options.
+   * @param isAuthorized Whether to use authorization.
+   */
   async delete(path: string, opts?: RequestInit, isAuthorized?: boolean) {
     return this.doRequest({
       method: 'DELETE',
