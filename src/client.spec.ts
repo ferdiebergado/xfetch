@@ -38,7 +38,6 @@ describe('APIClient', () => {
   let client: APIClient;
 
   beforeEach(() => {
-    // Reset the mock before each test
     vi.clearAllMocks();
     client = new APIClient(baseURL);
   });
@@ -80,7 +79,6 @@ describe('APIClient', () => {
         `${baseURL}${path}`,
         expect.objectContaining({
           method: 'POST',
-
           body: JSON.stringify(body),
         })
       );

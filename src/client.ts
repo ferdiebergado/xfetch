@@ -1,9 +1,10 @@
 import { HTTPError } from './http-error';
-import type {
-  HTTPClient,
-  RequestData,
-  RequestOpts,
-  TokenRenewHandler,
+import {
+  httpMethods,
+  type HTTPClient,
+  type RequestData,
+  type RequestOpts,
+  type TokenRenewHandler,
 } from './types';
 
 /**
@@ -98,8 +99,7 @@ export class APIClient implements HTTPClient {
       throw new Error('path must be a non-empty string starting with a slash.');
     }
 
-    const validMethods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'];
-    if (!validMethods.includes(method)) {
+    if (!httpMethods.includes(method)) {
       throw new Error(`Invalid HTTP method: ${method}`);
     }
 

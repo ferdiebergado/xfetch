@@ -1,4 +1,6 @@
-type httpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+export const httpMethods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'] as const;
+
+type HTTPMethod = (typeof httpMethods)[number];
 
 export type RequestData =
   | object
@@ -8,7 +10,7 @@ export type RequestData =
   | string;
 
 export interface RequestOpts {
-  method?: httpMethod;
+  method?: HTTPMethod;
   path: string;
   body?: RequestData;
   opts?: RequestInit;
