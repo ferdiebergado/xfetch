@@ -4,7 +4,7 @@
   "description": "simple, yet powerful, HTTP client designed to handle common API interactions with built-in support for token-based authentication and automatic token renewal",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ferdiebergado/xfetch.git"
+    "url": "git+https://github.com/ferdiebergado/xfetch.git"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
