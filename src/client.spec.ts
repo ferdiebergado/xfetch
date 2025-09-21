@@ -45,9 +45,7 @@ describe('APIClient', () => {
 
   describe('doRequest', () => {
     it('should throw an error if the path does not start with a slash', async () => {
-      await expect(
-        client.doRequest({ method: 'GET', path: 'users/1' })
-      ).rejects.toThrow(
+      await expect(client.doRequest({ path: 'users/1' })).rejects.toThrow(
         'path must be a non-empty string starting with a slash.'
       );
     });
@@ -58,7 +56,7 @@ describe('APIClient', () => {
       );
 
       const path = '/users';
-      await client.doRequest({ method: 'GET', path });
+      await client.doRequest({ path });
 
       expect(mockFetch).toHaveBeenCalledWith(
         `${baseURL}${path}`,
@@ -100,7 +98,6 @@ describe('APIClient', () => {
       client.setAccessToken('test-token', Date.now() + 60000);
 
       await client.doRequest({
-        method: 'GET',
         path: '/users/me',
         isAuthorized: false,
       });
@@ -117,7 +114,6 @@ describe('APIClient', () => {
       client.setAccessToken(token, Date.now() + 60000);
 
       await client.doRequest({
-        method: 'GET',
         path: '/users/me',
         isAuthorized: true,
       });
@@ -143,7 +139,6 @@ describe('APIClient', () => {
       );
 
       await client.doRequest({
-        method: 'GET',
         path: '/users/me',
         isAuthorized: true,
       });
@@ -164,7 +159,6 @@ describe('APIClient', () => {
 
       await expect(
         client.doRequest({
-          method: 'GET',
           path: '/users/me',
           isAuthorized: true,
         })
@@ -186,12 +180,10 @@ describe('APIClient', () => {
 
       // Simulate two concurrent requests that both need to renew the token
       const request1 = client.doRequest({
-        method: 'GET',
         path: '/users/me',
         isAuthorized: true,
       });
       const request2 = client.doRequest({
-        method: 'GET',
         path: '/users/me',
         isAuthorized: true,
       });
@@ -286,7 +278,7 @@ describe('APIClient', () => {
       );
 
       const path = '/non-existent-resource';
-      const request = client.doRequest({ method: 'GET', path });
+      const request = client.doRequest({ path });
 
       await expect(request).rejects.toThrow(HTTPError);
       await expect(request).rejects.toThrow('Request failed with status 404');
@@ -309,7 +301,7 @@ describe('APIClient', () => {
       );
 
       const path = '/server-error';
-      const request = client.doRequest({ method: 'GET', path });
+      const request = client.doRequest({ path });
 
       await expect(request).rejects.toThrow(HTTPError);
 

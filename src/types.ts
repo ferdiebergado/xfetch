@@ -8,7 +8,7 @@ export type RequestData =
   | string;
 
 export interface RequestOpts {
-  method: httpMethod;
+  method?: httpMethod;
   path: string;
   body?: RequestData;
   opts?: RequestInit;

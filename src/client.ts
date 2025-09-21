@@ -88,7 +88,7 @@ export class APIClient implements HTTPClient {
    * Handles authorization and error processing.
    */
   async doRequest({
-    method,
+    method = 'GET',
     path,
     body,
     opts = {},
@@ -157,7 +157,6 @@ export class APIClient implements HTTPClient {
    */
   async get(path: string, opts?: RequestInit, isAuthorized?: boolean) {
     return this.doRequest({
-      method: 'GET',
       path,
       opts,
       isAuthorized,
