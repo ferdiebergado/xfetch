@@ -17,21 +17,21 @@ export interface RequestOpts {
   isAuthorized?: boolean;
 }
 
-export type RequestBodyHandler = (
+export type RequestBodyHandler = <T>(
   path: string,
-  body: RequestData,
+  body?: RequestData,
   opts?: RequestInit,
   isAuthorized?: boolean
-) => Promise<Response>;
+) => Promise<T>;
 
-export type RequestHandler = (
+export type RequestHandler = <T>(
   path: string,
   opts?: RequestInit,
   isAuthorized?: boolean
-) => Promise<Response>;
+) => Promise<T>;
 
 export interface HTTPClient {
-  doRequest: (opts: RequestOpts) => Promise<Response>;
+  doRequest: <T>(opts: RequestOpts) => Promise<T>;
   get: RequestHandler;
   post: RequestBodyHandler;
   put: RequestBodyHandler;

@@ -89,13 +89,13 @@ export class APIClient implements HTTPClient {
    * Performs an HTTP request with the specified options.
    * Handles authorization and error processing.
    */
-  async doRequest({
+  async doRequest<T>({
     method = 'GET',
     path,
-    body,
+    body: body,
     opts = {},
     isAuthorized = false,
-  }: RequestOpts): Promise<Response> {
+  }: RequestOpts): Promise<T> {
     if (!path || typeof path !== 'string' || !path.startsWith('/')) {
       throw new Error('path must be a non-empty string starting with a slash.');
     }
@@ -147,7 +147,7 @@ export class APIClient implements HTTPClient {
       );
     }
 
-    return response;
+    return response.json() as T;
   }
 
   /**
@@ -156,8 +156,12 @@ export class APIClient implements HTTPClient {
    * @param opts Optional request options.
    * @param isAuthorized Whether to use authorization.
    */
-  async get(path: string, opts?: RequestInit, isAuthorized?: boolean) {
-    return this.doRequest({
+  async get<T>(
+    path: string,
+    opts?: RequestInit,
+    isAuthorized?: boolean
+  ): Promise<T> {
+    return this.doRequest<T>({
       path,
       opts,
       isAuthorized,
@@ -171,16 +175,16 @@ export class APIClient implements HTTPClient {
    * @param opts Optional request options.
    * @param isAuthorized Whether to use authorization.
    */
-  async post(
+  async post<T>(
     path: string,
     body?: RequestData,
     opts?: RequestInit,
     isAuthorized?: boolean
-  ) {
-    return this.doRequest({
+  ): Promise<T> {
+    return this.doRequest<T>({
       method: 'POST',
       path,
-      body,
+      body: body,
       opts,
       isAuthorized,
     });
@@ -193,16 +197,16 @@ export class APIClient implements HTTPClient {
    * @param opts Optional request options.
    * @param isAuthorized Whether to use authorization.
    */
-  async put(
+  async put<T>(
     path: string,
-    body: RequestData,
+    body?: RequestData,
     opts?: RequestInit,
     isAuthorized?: boolean
-  ) {
-    return this.doRequest({
+  ): Promise<T> {
+    return this.doRequest<T>({
       method: 'PUT',
       path,
-      body,
+      body: body,
       opts,
       isAuthorized,
     });
@@ -215,16 +219,16 @@ export class APIClient implements HTTPClient {
    * @param opts Optional request options.
    * @param isAuthorized Whether to use authorization.
    */
-  async patch(
+  async patch<T>(
     path: string,
-    body: RequestData,
+    body?: RequestData,
     opts?: RequestInit,
     isAuthorized?: boolean
-  ) {
-    return this.doRequest({
+  ): Promise<T> {
+    return this.doRequest<T>({
       method: 'PATCH',
       path,
-      body,
+      body: body,
       opts,
       isAuthorized,
     });
@@ -236,8 +240,12 @@ export class APIClient implements HTTPClient {
    * @param opts Optional request options.
    * @param isAuthorized Whether to use authorization.
    */
-  async delete(path: string, opts?: RequestInit, isAuthorized?: boolean) {
-    return this.doRequest({
+  async delete<T>(
+    path: string,
+    opts?: RequestInit,
+    isAuthorized?: boolean
+  ): Promise<T> {
+    return this.doRequest<T>({
       method: 'DELETE',
       path,
       opts,
