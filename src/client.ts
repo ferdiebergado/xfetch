@@ -20,6 +20,7 @@ export class APIClient implements HTTPClient {
   #expiresAt?: number;
   #renewTokenHandler?: TokenRenewHandler;
   #renewing?: Promise<void>;
+  readonly #originalFetch = fetch;
 
   constructor(baseURL: string) {
     if (!baseURL || typeof baseURL !== 'string') {
@@ -127,7 +128,7 @@ export class APIClient implements HTTPClient {
     };
 
     // Perform the fetch request
-    const response = await fetch(url, mergedOpts);
+    const response = await this.#originalFetch(url, mergedOpts);
 
     // Check for non-successful status codes and throw a custom error
     if (!response.ok) {
