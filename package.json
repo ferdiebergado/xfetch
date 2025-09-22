@@ -1,6 +1,6 @@
 {
   "name": "@ferdiebergado/fetchx",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "simple, yet powerful, HTTP client designed to handle common API interactions with built-in support for token-based authentication and automatic token renewal",
   "repository": {
     "type": "git",
