@@ -10,7 +10,7 @@
     "module": "nodenext",
     "target": "es2020",
     // For nodejs:
-    "lib": ["ES2020"],
+    "lib": ["ES2020", "DOM"],
     // "types": ["node"],
 
     // Other Outputs

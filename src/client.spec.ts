@@ -1,10 +1,54 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import {
+  afterAll,
+  afterEach,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from 'vitest';
 import { APIClient } from './client';
 import { HTTPError } from './http-error';
 
+const baseUrl = 'https://api.example.com';
+let client: APIClient;
+
+const realFetch = globalThis.fetch;
 const mockFetch = vi.fn();
 
-// Mock a simple Response class to simulate the real one
+beforeEach(() => {
+  client = new APIClient({ baseUrl });
+});
+
+beforeAll(() => {
+  globalThis.fetch = mockFetch;
+});
+
+afterAll(() => {
+  globalThis.fetch = realFetch;
+});
+
+afterEach(() => {
+  vi.resetAllMocks();
+});
+
+// ---- Mock document.cookie ----
+let cookieStore = '';
+
+Object.defineProperty(globalThis, 'document', {
+  value: {},
+  writable: true,
+});
+
+Object.defineProperty(document, 'cookie', {
+  get: vi.fn(() => cookieStore),
+  set: vi.fn((val: string) => {
+    cookieStore = val;
+  }),
+  configurable: true,
+});
+
 class MockResponse {
   ok: boolean;
   status: number;
@@ -30,18 +74,7 @@ class MockResponse {
   }
 }
 
-// Global mock for fetch
-globalThis.fetch = mockFetch;
-
 describe('APIClient', () => {
-  const baseURL = 'https://api.example.com';
-  let client: APIClient;
-
-  beforeEach(() => {
-    vi.clearAllMocks();
-    client = new APIClient(baseURL);
-  });
-
   describe('doRequest', () => {
     it('should throw an error if the path does not start with a slash', async () => {
       await expect(client.doRequest({ path: 'users/1' })).rejects.toThrow(
@@ -58,7 +91,7 @@ describe('APIClient', () => {
       await client.doRequest({ path });
 
       expect(mockFetch).toHaveBeenCalledWith(
-        `${baseURL}${path}`,
+        `${baseUrl}${path}`,
         expect.objectContaining({
           method: 'GET',
           headers: expect.any(Headers),
@@ -76,7 +109,7 @@ describe('APIClient', () => {
       await client.doRequest({ method: 'POST', path, data });
 
       expect(mockFetch).toHaveBeenCalledWith(
-        `${baseURL}${path}`,
+        `${baseUrl}${path}`,
         expect.objectContaining({
           method: 'POST',
           body: JSON.stringify(data),
@@ -217,7 +250,7 @@ describe('APIClient', () => {
       mockFetch.mockResolvedValue(mockResponse);
       await client.get(path);
       expect(mockFetch).toHaveBeenCalledWith(
-        `${baseURL}${path}`,
+        `${baseUrl}${path}`,
         expect.objectContaining({ method: 'GET' })
       );
     });
@@ -226,7 +259,7 @@ describe('APIClient', () => {
       mockFetch.mockResolvedValue(mockResponse);
       await client.post(path, data);
       expect(mockFetch).toHaveBeenCalledWith(
-        `${baseURL}${path}`,
+        `${baseUrl}${path}`,
         expect.objectContaining({
           method: 'POST',
           body: JSON.stringify(data),
@@ -238,7 +271,7 @@ describe('APIClient', () => {
       mockFetch.mockResolvedValue(mockResponse);
       await client.put(path, data);
       expect(mockFetch).toHaveBeenCalledWith(
-        `${baseURL}${path}`,
+        `${baseUrl}${path}`,
         expect.objectContaining({
           method: 'PUT',
           body: JSON.stringify(data),
@@ -250,7 +283,7 @@ describe('APIClient', () => {
       mockFetch.mockResolvedValue(mockResponse);
       await client.patch(path, data);
       expect(mockFetch).toHaveBeenCalledWith(
-        `${baseURL}${path}`,
+        `${baseUrl}${path}`,
         expect.objectContaining({
           method: 'PATCH',
           body: JSON.stringify(data),
@@ -262,7 +295,7 @@ describe('APIClient', () => {
       mockFetch.mockResolvedValue(mockResponse);
       await client.delete(path);
       expect(mockFetch).toHaveBeenCalledWith(
-        `${baseURL}${path}`,
+        `${baseUrl}${path}`,
         expect.objectContaining({ method: 'DELETE' })
       );
     });

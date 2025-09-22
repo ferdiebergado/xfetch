@@ -43,3 +43,9 @@ export type TokenRenewHandler = () => Promise<{
   accessToken: string;
   expiresAt: number;
 }>;
+
+export interface APIClientOptions {
+  baseUrl: string;
+  csrfHeaderName: string;
+  csrfCookieName: string;
+}

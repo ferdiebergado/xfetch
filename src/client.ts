@@ -1,5 +1,6 @@
 import { HTTPError } from './http-error';
 import {
+  APIClientOptions,
   httpMethods,
   type HTTPClient,
   type RequestData,
@@ -15,18 +16,20 @@ import {
  * making it easy to integrate with APIs that require bearer tokens and token expiration logic.
  */
 export class APIClient implements HTTPClient {
-  #baseURL: string;
+  #options: APIClientOptions;
   #accessToken?: string;
   #expiresAt?: number;
   #renewTokenHandler?: TokenRenewHandler;
   #renewing?: Promise<void>;
   readonly #originalFetch = fetch;
 
-  constructor(baseURL: string) {
-    if (!baseURL || typeof baseURL !== 'string') {
-      throw new Error('baseURL must be a non-empty string.');
-    }
-    this.#baseURL = baseURL;
+  constructor(options?: Partial<APIClientOptions>) {
+    this.#options = {
+      csrfCookieName: 'XSRF-TOKEN',
+      csrfHeaderName: 'X-CSRF-Token',
+      baseUrl: '',
+      ...options,
+    };
   }
 
   /**
@@ -108,7 +111,7 @@ export class APIClient implements HTTPClient {
       await this.#ensureValidToken();
     }
 
-    const url = this.#baseURL + path;
+    const url = this.#options.baseUrl + path;
     const headers = new Headers(opts.headers);
 
     const methodsWithBody = ['POST', 'PUT', 'PATCH'];
@@ -119,6 +122,12 @@ export class APIClient implements HTTPClient {
 
     if (isAuthorized && this.#accessToken) {
       headers.set('Authorization', `Bearer ${this.#accessToken}`);
+    }
+
+    if ([...methodsWithBody, 'DELETE'].includes(method)) {
+      const csrfToken = this.#getCsrfToken();
+
+      if (csrfToken) headers.set(this.#options.csrfHeaderName, csrfToken);
     }
 
     const mergedOpts: RequestInit = {
@@ -251,5 +260,16 @@ export class APIClient implements HTTPClient {
       opts,
       isAuthorized,
     });
+  }
+
+  #getCsrfToken(): string {
+    const tokenCookie = document.cookie
+      .split('; ')
+      .find((cookie) => cookie.startsWith(`${this.#options.csrfCookieName}=`));
+
+    if (!tokenCookie) return '';
+
+    const token = tokenCookie.split('=')[1];
+    return token ?? '';
   }
 }

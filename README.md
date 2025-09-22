@@ -11,7 +11,7 @@ To use the client, simply create a new instance with your API's base URL.
 ```ts
 import { APIClient } from '@ferdiebergado/fetchx';
 
-const client = new APIClient('https://api.your-domain.com');
+const client = new APIClient({ baseUrl: 'https://api.your-domain.com' });
 ```
 
 ## Authentication
@@ -58,16 +58,43 @@ client.setTokenRenewHandler(renewTokenHandler);
 
 When an authorized request is made, the client will check the token's expiration. If it's expired, it will call your `renewTokenHandler` once and wait for the new token before proceeding with the request. This prevents race conditions where multiple requests try to renew the token simultaneously.
 
+## CSRF Protection
+
+For state-changing requests (POST, PUT, PATCH, DELETE), the client automatically includes a CSRF token header if a token cookie is present.
+
+- By default:
+  - Cookie name: XSRF-TOKEN
+  - Header name: X-CSRF-Token
+
+- You can override these via the constructor options:
+
+```ts
+const client = new APIClient({
+  baseUrl: 'https://api.your-domain.com',
+  csrfCookieName: 'MY-CSRF',
+  csrfHeaderName: 'X-MY-CSRF',
+});
+```
+
+The CSRF token is read from `document.cookie` and added to the request headers.
+This requires your backend to issue a CSRF cookie and validate the header.
+
 ## Making Requests
 
 The client provides helper methods for common HTTP verbs. For authorized requests, you must pass `true` as the last argument.
+
+⚠️ **Important**: The request method helpers (get, post, etc.) always return the parsed JSON body of the response, not the raw Response object.
 
 ### GET Request
 
 ```ts
 try {
-  const data = await client.get('/users/me', undefined, true);
-  // Do something with the data
+  const data = await client.get<{ id: number; name: string }>(
+    '/users/me',
+    undefined,
+    true
+  );
+  console.log(data.name);
 } catch (error) {
   // Handle the error
 }
@@ -82,9 +109,11 @@ const newUser = {
 };
 
 try {
-  const response = await client.post('/users', newUser);
-  // The response is a standard Fetch Response object
-  const createdUser = await response.json();
+  const createdUser = await client.post<{ id: number; name: string }>(
+    '/users',
+    newUser
+  );
+  console.log(createdUser.id);
 } catch (error) {
   // Handle the error
 }
@@ -98,8 +127,8 @@ The usage is similar for `put`, `patch`, and `delete`. The `put` and `patch` met
 // Update user's name
 await client.patch('/users/123', { name: 'John Doe' });
 
-// Delete a user
-await client.delete('/users/456', undefined, true); // Authorized deletion
+// Authorized deletion (includes access token + CSRF)
+await client.delete('/users/456', undefined, true);
 ```
 
 ## Error Handling
@@ -129,12 +158,14 @@ This example demonstrates a full lifecycle with a refresh handler.
 import { APIClient, HTTPError } from '@ferdiebergado/fetchx';
 
 async function main() {
-  const client = new APIClient('https://api.your-domain.com');
+  const client = new APIClient({ baseUrl: 'https://api.your-domain.com' });
 
-  // Your token renewal logic
   client.setTokenRenewHandler(async () => {
     console.log('Token expired, renewing...');
-    const response = await fetch('https://api.your-domain.com/auth/refresh');
+    const response = await fetch('https://api.your-domain.com/auth/refresh', {
+      method: 'POST',
+      credentials: 'include',
+    });
     const data = await response.json();
     return {
       accessToken: data.newAccessToken,
@@ -142,14 +173,19 @@ async function main() {
     };
   });
 
-  // Manually set an expired token to trigger the renewal handler
+  // Simulate expired token
   client.setAccessToken('expired_token', Date.now() - 1000);
 
   try {
-    const userProfile = await client.get('/profile', undefined, true);
-    console.log('Successfully fetched profile after token renewal.');
-    const profileData = await userProfile.json();
-    console.log(profileData);
+    const userProfile = await client.get<{ id: number; name: string }>(
+      '/profile',
+      undefined,
+      true
+    );
+    console.log(
+      'Successfully fetched profile after token renewal:',
+      userProfile
+    );
   } catch (error) {
     if (error instanceof HTTPError) {
       console.error(`HTTP Error: ${error.status}`);
