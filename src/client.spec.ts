@@ -72,14 +72,14 @@ describe('APIClient', () => {
       );
 
       const path = '/users';
-      const body = { name: 'Test User' };
-      await client.doRequest({ method: 'POST', path, body });
+      const data = { name: 'Test User' };
+      await client.doRequest({ method: 'POST', path, data });
 
       expect(mockFetch).toHaveBeenCalledWith(
         `${baseURL}${path}`,
         expect.objectContaining({
           method: 'POST',
-          body: JSON.stringify(body),
+          body: JSON.stringify(data),
         })
       );
 
@@ -207,7 +207,7 @@ describe('APIClient', () => {
 
   describe('HTTP methods', () => {
     const path = '/data';
-    const body = { data: 'test' };
+    const data = { data: 'test' };
     const mockResponse = new MockResponse(
       { success: true },
       { status: 200, ok: true }
@@ -224,36 +224,36 @@ describe('APIClient', () => {
 
     it('post should call doRequest with POST method and body', async () => {
       mockFetch.mockResolvedValue(mockResponse);
-      await client.post(path, body);
+      await client.post(path, data);
       expect(mockFetch).toHaveBeenCalledWith(
         `${baseURL}${path}`,
         expect.objectContaining({
           method: 'POST',
-          body: JSON.stringify(body),
+          body: JSON.stringify(data),
         })
       );
     });
 
     it('put should call doRequest with PUT method and body', async () => {
       mockFetch.mockResolvedValue(mockResponse);
-      await client.put(path, body);
+      await client.put(path, data);
       expect(mockFetch).toHaveBeenCalledWith(
         `${baseURL}${path}`,
         expect.objectContaining({
           method: 'PUT',
-          body: JSON.stringify(body),
+          body: JSON.stringify(data),
         })
       );
     });
 
     it('patch should call doRequest with PATCH method and body', async () => {
       mockFetch.mockResolvedValue(mockResponse);
-      await client.patch(path, body);
+      await client.patch(path, data);
       expect(mockFetch).toHaveBeenCalledWith(
         `${baseURL}${path}`,
         expect.objectContaining({
           method: 'PATCH',
-          body: JSON.stringify(body),
+          body: JSON.stringify(data),
         })
       );
     });

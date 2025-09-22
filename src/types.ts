@@ -12,14 +12,14 @@ export type RequestData =
 export interface RequestOpts {
   method?: HTTPMethod;
   path: string;
-  body?: RequestData;
+  data?: RequestData;
   opts?: RequestInit;
   isAuthorized?: boolean;
 }
 
 export type RequestBodyHandler = <T>(
   path: string,
-  body?: RequestData,
+  data?: RequestData,
   opts?: RequestInit,
   isAuthorized?: boolean
 ) => Promise<T>;

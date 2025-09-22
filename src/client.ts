@@ -92,7 +92,7 @@ export class APIClient implements HTTPClient {
   async doRequest<T>({
     method = 'GET',
     path,
-    body: body,
+    data,
     opts = {},
     isAuthorized = false,
   }: RequestOpts): Promise<T> {
@@ -112,9 +112,9 @@ export class APIClient implements HTTPClient {
     const headers = new Headers(opts.headers);
 
     const methodsWithBody = ['POST', 'PUT', 'PATCH'];
-    if (methodsWithBody.includes(method) && body) {
+    if (methodsWithBody.includes(method) && data) {
       headers.set('Content-Type', 'application/json');
-      opts.body = JSON.stringify(body);
+      opts.body = JSON.stringify(data);
     }
 
     if (isAuthorized && this.#accessToken) {
@@ -171,20 +171,20 @@ export class APIClient implements HTTPClient {
   /**
    * Sends an HTTP POST request to the specified path with the given body.
    * @param path The request path starting with a slash.
-   * @param body The request payload.
+   * @param data Optional request payload.
    * @param opts Optional request options.
    * @param isAuthorized Whether to use authorization.
    */
   async post<T>(
     path: string,
-    body?: RequestData,
+    data?: RequestData,
     opts?: RequestInit,
     isAuthorized?: boolean
   ): Promise<T> {
     return this.doRequest<T>({
       method: 'POST',
       path,
-      body: body,
+      data,
       opts,
       isAuthorized,
     });
@@ -193,20 +193,20 @@ export class APIClient implements HTTPClient {
   /**
    * Sends an HTTP PUT request to the specified path with the given body.
    * @param path The request path starting with a slash.
-   * @param body The request payload.
+   * @param data Optional request payload.
    * @param opts Optional request options.
    * @param isAuthorized Whether to use authorization.
    */
   async put<T>(
     path: string,
-    body?: RequestData,
+    data?: RequestData,
     opts?: RequestInit,
     isAuthorized?: boolean
   ): Promise<T> {
     return this.doRequest<T>({
       method: 'PUT',
       path,
-      body: body,
+      data,
       opts,
       isAuthorized,
     });
@@ -215,20 +215,20 @@ export class APIClient implements HTTPClient {
   /**
    * Sends an HTTP PATCH request to the specified path with the given body.
    * @param path The request path starting with a slash.
-   * @param body The request payload.
+   * @param data Optional request payload.
    * @param opts Optional request options.
    * @param isAuthorized Whether to use authorization.
    */
   async patch<T>(
     path: string,
-    body?: RequestData,
+    data?: RequestData,
     opts?: RequestInit,
     isAuthorized?: boolean
   ): Promise<T> {
     return this.doRequest<T>({
       method: 'PATCH',
       path,
-      body: body,
+      data,
       opts,
       isAuthorized,
     });
