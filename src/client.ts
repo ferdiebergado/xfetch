@@ -172,7 +172,7 @@ export class APIClient implements HTTPClient {
    */
   async post(
     path: string,
-    body: RequestData,
+    body?: RequestData,
     opts?: RequestInit,
     isAuthorized?: boolean
   ) {
