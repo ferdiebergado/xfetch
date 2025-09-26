@@ -60,11 +60,11 @@ When an authorized request is made, the client will check the token's expiration
 
 ## CSRF Protection
 
-For state-changing requests (POST, PUT, PATCH, DELETE), the client automatically includes a CSRF token header if a token cookie is present.
+For state-changing requests (`POST`, `PUT`, `PATCH`, `DELETE`), the client automatically includes a CSRF token header if a token cookie is present.
 
 - By default:
-  - Cookie name: XSRF-TOKEN
-  - Header name: X-CSRF-Token
+  - Cookie name: `XSRF-TOKEN`
+  - Header name: `X-CSRF-Token`
 
 - You can override these via the constructor options:
 
@@ -83,7 +83,7 @@ This requires your backend to issue a CSRF cookie and validate the header.
 
 The client provides helper methods for common HTTP verbs. For authorized requests, you must pass `true` as the last argument.
 
-⚠️ **Important**: The request method helpers (get, post, etc.) always return the parsed JSON body of the response, not the raw Response object.
+⚠️ **Important**: The request method helpers (`get`, `post`, etc.) always return the parsed `JSON` body of the response, **not** the raw `Response` object.
 
 ### GET Request
 
