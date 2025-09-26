@@ -21,7 +21,7 @@ export class APIClient implements HTTPClient {
   #expiresAt?: number;
   #renewTokenHandler?: TokenRenewHandler;
   #renewing?: Promise<void>;
-  readonly #originalFetch = fetch;
+  readonly #originalFetch = typeof window !== 'undefined' ? window.fetch : null;
 
   constructor(options?: Partial<APIClientOptions>) {
     this.#options = {
@@ -137,7 +137,9 @@ export class APIClient implements HTTPClient {
     };
 
     // Perform the fetch request
-    const response = await this.#originalFetch(url, mergedOpts);
+    if (!this.#originalFetch)
+      throw new Error('fetch is not available in this context');
+    const response = await this.#originalFetch.call(null, url, mergedOpts);
 
     // Check for non-successful status codes and throw a custom error
     if (!response.ok) {

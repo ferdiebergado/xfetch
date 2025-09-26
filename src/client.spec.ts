@@ -17,6 +17,12 @@ let client: APIClient;
 const realFetch = globalThis.fetch;
 const mockFetch = vi.fn();
 
+Object.defineProperty(globalThis, 'window', {
+  value: {
+    fetch: mockFetch,
+  },
+});
+
 beforeEach(() => {
   client = new APIClient({ baseUrl });
 });
