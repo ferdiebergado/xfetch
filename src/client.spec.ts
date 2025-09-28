@@ -109,6 +109,45 @@ describe('APIClient', () => {
       const requestOpts = mockFetch.mock.calls[0]?.[1];
       expect(requestOpts.headers.get('Content-Type')).toBe('application/json');
     });
+
+    it('should make a POST request without body and correct headers if data is an empty object', async () => {
+      mockFetch.mockResolvedValue(
+        new MockResponse({ id: 1 }, { status: 201, ok: true })
+      );
+
+      const path = '/users';
+      const data = {};
+      await client.doRequest({ method: 'POST', path, data });
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        `${baseUrl}${path}`,
+        expect.objectContaining({
+          method: 'POST',
+        })
+      );
+
+      const requestOpts = mockFetch.mock.calls[0]?.[1];
+      expect(requestOpts.headers.get('Content-Type')).toBe('application/json');
+    });
+
+    it('should make a POST request without body and correct headers if data is not provided', async () => {
+      mockFetch.mockResolvedValue(
+        new MockResponse({ id: 1 }, { status: 201, ok: true })
+      );
+
+      const path = '/users';
+      await client.doRequest({ method: 'POST', path });
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        `${baseUrl}${path}`,
+        expect.objectContaining({
+          method: 'POST',
+        })
+      );
+
+      const requestOpts = mockFetch.mock.calls[0]?.[1];
+      expect(requestOpts.headers.get('Content-Type')).toBe('application/json');
+    });
   });
 
   describe('Token Management', () => {

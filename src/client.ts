@@ -116,9 +116,10 @@ export class APIClient implements HTTPClient {
     const headers = new Headers(opts.headers);
 
     const methodsWithBody = ['POST', 'PUT', 'PATCH'];
-    if (methodsWithBody.includes(method) && data) {
+    if (methodsWithBody.includes(method)) {
       headers.set('Content-Type', 'application/json');
-      opts.body = JSON.stringify(data);
+      if (data && Object.keys(data).length > 0)
+        opts.body = JSON.stringify(data);
     }
 
     if (isAuthorized && this.#accessToken) {
