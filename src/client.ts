@@ -95,7 +95,7 @@ export class APIClient implements HTTPClient {
   async doRequest<T>({
     method = 'GET',
     path,
-    data = {},
+    data,
     opts = {},
     isAuthorized = false,
   }: RequestOpts): Promise<T> {
@@ -117,7 +117,7 @@ export class APIClient implements HTTPClient {
     const methodsWithBody = ['POST', 'PUT', 'PATCH'];
     if (methodsWithBody.includes(method)) {
       headers.set('Content-Type', 'application/json');
-      opts.body = JSON.stringify(data);
+      opts.body = JSON.stringify(data ?? {});
     }
 
     if (isAuthorized && this.#accessToken) {
