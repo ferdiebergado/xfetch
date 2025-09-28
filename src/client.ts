@@ -4,7 +4,6 @@ import {
   APIClientOptions,
   httpMethods,
   type HTTPClient,
-  type RequestData,
   type RequestOpts,
   type TokenRenewHandler,
 } from './types';
@@ -118,17 +117,18 @@ export class APIClient implements HTTPClient {
     const methodsWithBody = ['POST', 'PUT', 'PATCH'];
     if (methodsWithBody.includes(method)) {
       headers.set('Content-Type', 'application/json');
-      if (data && Object.keys(data).length > 0)
-        opts.body = JSON.stringify(data);
+      opts.body = JSON.stringify(data);
     }
 
     if (isAuthorized && this.#accessToken) {
       headers.set('Authorization', `Bearer ${this.#accessToken}`);
     }
 
-    if ([...methodsWithBody, 'DELETE'].includes(method)) {
+    if (
+      [...methodsWithBody, 'DELETE'].includes(method) &&
+      typeof document !== 'undefined'
+    ) {
       const csrfToken = this.#getCsrfToken();
-
       if (csrfToken) headers.set(this.#options.csrfHeaderName, csrfToken);
     }
 
@@ -190,7 +190,7 @@ export class APIClient implements HTTPClient {
    */
   async post<T>(
     path: string,
-    data?: RequestData,
+    data?: Record<string, unknown>,
     opts?: RequestInit,
     isAuthorized?: boolean
   ): Promise<T> {
@@ -212,7 +212,7 @@ export class APIClient implements HTTPClient {
    */
   async put<T>(
     path: string,
-    data?: RequestData,
+    data?: Record<string, unknown>,
     opts?: RequestInit,
     isAuthorized?: boolean
   ): Promise<T> {
@@ -234,7 +234,7 @@ export class APIClient implements HTTPClient {
    */
   async patch<T>(
     path: string,
-    data?: RequestData,
+    data?: Record<string, unknown>,
     opts?: RequestInit,
     isAuthorized?: boolean
   ): Promise<T> {

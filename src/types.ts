@@ -2,24 +2,17 @@ export const httpMethods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'] as const;
 
 type HTTPMethod = (typeof httpMethods)[number];
 
-export type RequestData =
-  | object
-  | unknown[]
-  | FormData
-  | URLSearchParams
-  | string;
-
 export interface RequestOpts {
   method?: HTTPMethod;
   path: string;
-  data?: RequestData;
+  data?: Record<string, unknown>;
   opts?: RequestInit;
   isAuthorized?: boolean;
 }
 
-export type RequestBodyHandler = <T>(
+export type RequestDataHandler = <T>(
   path: string,
-  data?: RequestData,
+  data?: Record<string, unknown>,
   opts?: RequestInit,
   isAuthorized?: boolean
 ) => Promise<T>;
@@ -33,9 +26,9 @@ export type RequestHandler = <T>(
 export interface HTTPClient {
   doRequest: <T>(opts: RequestOpts) => Promise<T>;
   get: RequestHandler;
-  post: RequestBodyHandler;
-  put: RequestBodyHandler;
-  patch: RequestBodyHandler;
+  post: RequestDataHandler;
+  put: RequestDataHandler;
+  patch: RequestDataHandler;
   delete: RequestHandler;
 }
 
