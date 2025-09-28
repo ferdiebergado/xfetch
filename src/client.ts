@@ -95,7 +95,7 @@ export class APIClient implements HTTPClient {
   async doRequest<T>({
     method = 'GET',
     path,
-    data,
+    data = {},
     opts = {},
     isAuthorized = false,
   }: RequestOpts): Promise<T> {
