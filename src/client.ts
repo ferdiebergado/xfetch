@@ -1,3 +1,4 @@
+import { getCookie } from './cookie';
 import { HTTPError } from './http-error';
 import {
   APIClientOptions,
@@ -265,13 +266,6 @@ export class APIClient implements HTTPClient {
   }
 
   #getCsrfToken(): string {
-    const tokenCookie = document.cookie
-      .split('; ')
-      .find((cookie) => cookie.startsWith(`${this.#options.csrfCookieName}=`));
-
-    if (!tokenCookie) return '';
-
-    const token = tokenCookie.split('=')[1];
-    return token ?? '';
+    return getCookie(this.#options.csrfCookieName);
   }
 }
