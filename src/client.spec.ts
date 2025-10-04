@@ -376,5 +376,20 @@ describe('APIClient', () => {
         });
       }
     });
+
+    it('should throw an error if the payload size is too large', async () => {
+      const mockResponse = new MockResponse(
+        { message: 'User updated' },
+        { status: 200, ok: true }
+      );
+      mockFetch.mockResolvedValue(mockResponse);
+
+      const path = '/users/1';
+      const data = { name: 'thisisaverylongname' };
+      const client = new APIClient({ baseUrl, maxPayloadSize: 10 });
+      const res = client.doRequest({ method: 'POST', path, data });
+      const errMsg = 'Request payload too large';
+      await expect(res).rejects.toThrow(errMsg);
+    });
   });
 });

@@ -41,4 +41,5 @@ export interface APIClientOptions {
   baseUrl: string;
   csrfHeaderName: string;
   csrfCookieName: string;
+  maxPayloadSize: number;
 }

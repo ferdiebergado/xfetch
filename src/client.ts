@@ -27,6 +27,7 @@ export class APIClient implements HTTPClient {
     this.#options = {
       csrfCookieName: 'XSRF-TOKEN',
       csrfHeaderName: 'X-CSRF-Token',
+      maxPayloadSize: 4096,
       baseUrl: '',
       ...options,
     };
@@ -117,7 +118,11 @@ export class APIClient implements HTTPClient {
     const methodsWithBody = ['POST', 'PUT', 'PATCH'];
     if (methodsWithBody.includes(method)) {
       headers.set('Content-Type', 'application/json');
-      opts.body = JSON.stringify(data ?? {});
+      const payload = JSON.stringify(data ?? {});
+      if (Buffer.byteLength(payload, 'utf8') > this.#options.maxPayloadSize) {
+        throw new Error('Request payload too large.');
+      }
+      opts.body = payload;
     }
 
     if (isAuthorized && this.#accessToken) {
