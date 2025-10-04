@@ -24,7 +24,7 @@ Object.defineProperty(globalThis, 'window', {
 });
 
 beforeEach(() => {
-  client = new APIClient({ baseUrl });
+  client = new APIClient({ baseUrl, trustedDomains: ['api.example.com'] });
 });
 
 beforeAll(() => {
@@ -386,10 +386,26 @@ describe('APIClient', () => {
 
       const path = '/users/1';
       const data = { name: 'thisisaverylongname' };
-      const client = new APIClient({ baseUrl, maxPayloadSize: 10 });
+      const client = new APIClient({
+        baseUrl,
+        maxPayloadSize: 10,
+        trustedDomains: ['api.example.com'],
+      });
       const res = client.doRequest({ method: 'POST', path, data });
       const errMsg = 'Request payload too large';
       await expect(res).rejects.toThrow(errMsg);
+    });
+
+    it('should throw an error if the domain of the baseUrl is untrusted', () => {
+      const untrustedDomain = 'api.unknown.com';
+      const errMsg = `Domain not trusted: ${untrustedDomain}`;
+      expect(
+        () =>
+          new APIClient({
+            baseUrl: untrustedDomain,
+            trustedDomains: ['api.example.com'],
+          })
+      ).toThrow(errMsg);
     });
   });
 });

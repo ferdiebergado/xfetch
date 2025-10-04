@@ -28,9 +28,21 @@ export class APIClient implements HTTPClient {
       csrfCookieName: 'XSRF-TOKEN',
       csrfHeaderName: 'X-CSRF-Token',
       maxPayloadSize: 4096,
+      trustedDomains: ['localhost', '127.0.0.1'],
       baseUrl: '',
       ...options,
     };
+
+    try {
+      const parsedUrl = new URL(this.#options.baseUrl);
+      const isTrusted = this.#options.trustedDomains.includes(
+        parsedUrl.hostname
+      );
+      if (!isTrusted) throw new Error();
+    } catch (e) {
+      console.error(e);
+      throw new Error(`Domain not trusted: ${this.#options.baseUrl}`);
+    }
   }
 
   /**

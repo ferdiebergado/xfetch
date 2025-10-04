@@ -6,12 +6,15 @@
 
 ## Initialization
 
-To use the client, simply create a new instance with your API's base URL.
+To use the client, simply create a new instance with your API's base URL and trusted domains.
 
 ```ts
 import { APIClient } from '@ferdiebergado/fetchx';
 
-const client = new APIClient({ baseUrl: 'https://api.your-domain.com' });
+const client = new APIClient({
+  baseUrl: 'https://api.your-domain.com',
+  trustedDomains: ['api.your-domain.com'],
+});
 ```
 
 ## Authentication

@@ -42,4 +42,5 @@ export interface APIClientOptions {
   csrfHeaderName: string;
   csrfCookieName: string;
   maxPayloadSize: number;
+  trustedDomains: string[];
 }
